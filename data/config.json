@@ -1,0 +1,12 @@
+{
+  "app_name": "Chatbot Application",
+  "version": "1.0",
+  "debug": true,
+  "secret_key": "your_secret_key_here",
+  "database": {
+    "host": "localhost",
+    "user": "shyam",
+    "password": "shyam@2119",
+    "name": "chatbotdb"
+  }
+}

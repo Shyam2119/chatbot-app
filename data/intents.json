@@ -1,0 +1,185 @@
+{
+  "intents": [
+    {
+      "tag": "greeting",
+      "patterns": [
+        "Hi", "Hey", "Hello", "Good day", "Greetings", "What's up", 
+        "How are you", "Good morning", "Good afternoon", "Good evening",
+        "Howdy", "Sup", "Yo", "Hiya", "Hello there"
+      ],
+      "responses": [
+        "Hello! I'm here to help you with any questions or concerns. What can I assist you with today?",
+        "Hi there! Welcome to our customer support. How may I help you?",
+        "Hello! I'm your virtual assistant. What would you like help with today?",
+        "Hi! I'm ready to assist you. What brings you here today?"
+      ],
+      "positive_responses": [
+        "Hello! You seem to be in a great mood today. How can I help make your day even better?",
+        "Hi there! I'm excited to help you today. What can I do for you?"
+      ],
+      "context_aware": true
+    },
+    {
+      "tag": "goodbye",
+      "patterns": [
+        "Bye", "See you", "Goodbye", "Take care", "Catch you later", 
+        "Have a nice day", "Thanks, bye", "That's all", "I'm done",
+        "Exit", "Quit", "Leave", "See ya", "Farewell"
+      ],
+      "responses": [
+        "Goodbye! Thank you for chatting with us today. Have a wonderful day!",
+        "Thanks for reaching out! Feel free to return anytime if you need help.",
+        "Take care! Don't hesitate to contact us again if you have more questions.",
+        "Goodbye! I hope I was able to help you today."
+      ],
+      "negative_responses": [
+        "I'm sorry if I couldn't fully resolve your issue today. Please don't hesitate to contact us again or speak with a human agent.",
+        "I understand your frustration. Thank you for your patience, and please reach out again if you need further assistance."
+      ]
+    },
+    {
+      "tag": "thanks",
+      "patterns": [
+        "Thanks", "Thank you", "Thanks a lot", "I appreciate it", 
+        "That's helpful", "Perfect", "Great", "Awesome", "You're helpful",
+        "Much appreciated", "Thanks so much", "Thank you very much"
+      ],
+      "responses": [
+        "You're very welcome! I'm glad I could help.",
+        "Happy to assist! Is there anything else you need help with?",
+        "You're welcome! Feel free to ask if you have any other questions.",
+        "My pleasure! I'm here whenever you need support."
+      ]
+    },
+    {
+      "tag": "order_status",
+      "patterns": [
+        "Where is my order", "Check order status", "When will my order arrive", 
+        "Track my package", "Order tracking", "Delivery status", "Shipment status",
+        "My order hasn't arrived", "Order delay", "When shipped", "Tracking number",
+        "Order update", "Package location", "Delivery time", "Order progress"
+      ],
+      "responses": [
+        "I'd be happy to help you track your order! To check your order status, I'll need your order number. It usually starts with letters followed by numbers (like AB123456). Can you share it with me?",
+        "Let me help you check on your order. Could you please provide your order number? You can find it in your confirmation email or account.",
+        "I can definitely help track your package! What's your order number? It should be in the format of letters and numbers."
+      ],
+      "negative_responses": [
+        "I understand you're concerned about your order, and I want to help resolve this quickly. Could you please share your order number so I can check the status immediately?",
+        "I'm sorry for any worry about your order. Let me look into this right away - what's your order number?"
+      ]
+    },
+    {
+      "tag": "return_policy",
+      "patterns": [
+        "How do I return", "Return policy", "Can I get a refund", "Exchange item",
+        "Damaged product", "Return process", "Refund policy", "Send back",
+        "Wrong item", "Don't want it", "Change my mind", "Return procedure",
+        "Defective item", "Item broken", "Not as described", "Return timeframe"
+      ],
+      "responses": [
+        "I can help you with returns! Our return policy allows returns within 30 days of purchase. Items should be in original condition with tags attached. Would you like me to start a return for a specific order?",
+        "We accept returns within 30 days of delivery. The item needs to be unused and in original packaging. Do you have an order number for the item you'd like to return?",
+        "Our return process is simple! You have 30 days to return items in original condition. I can help you initiate a return - what's your order number?"
+      ],
+      "negative_responses": [
+        "I'm sorry you're not satisfied with your purchase. I want to make this right for you. Our return policy allows 30 days for returns. What's your order number so I can help you immediately?",
+        "I understand your frustration with the item. Let me help you return it right away. Could you share your order number?"
+      ]
+    },
+    {
+      "tag": "product_info",
+      "patterns": [
+        "Tell me about", "Product details", "What is", "How does it work",
+        "Features", "Specifications", "Size", "Color", "Material", "Price",
+        "Available options", "Product description", "Technical specs"
+      ],
+      "responses": [
+        "I'd be happy to help you learn more about our products! Which specific product are you interested in?",
+        "I can provide detailed product information. What product would you like to know more about?",
+        "Let me help you find the product details you need. Which item are you looking at?"
+      ]
+    },
+    {
+      "tag": "payment_issue",
+      "patterns": [
+        "Payment failed", "Credit card declined", "Billing problem", "Charge error",
+        "Payment not working", "Can't pay", "Transaction failed", "Card issue",
+        "Payment method", "Billing address", "Wrong charge", "Refund payment"
+      ],
+      "responses": [
+        "I'm sorry you're experiencing payment issues. I can help resolve this. Can you tell me more about the specific problem you're encountering?",
+        "Let me help you with your payment concern. What exactly is happening when you try to make the payment?",
+        "I understand payment issues can be frustrating. Could you describe what error message or problem you're seeing?"
+      ]
+    },
+    {
+      "tag": "account_help",
+      "patterns": [
+        "Account problem", "Can't login", "Password reset", "Forgot password",
+        "Account locked", "Update account", "Change email", "Profile settings",
+        "Login issue", "Access problem", "Account recovery", "Update info"
+      ],
+      "responses": [
+        "I can help you with your account! What specific issue are you experiencing with your account access?",
+        "Let me assist you with your account problem. Are you having trouble logging in, or is it a different account issue?",
+        "I'm here to help with account-related concerns. Could you tell me more about what's happening?"
+      ]
+    },
+    {
+      "tag": "shipping_info",
+      "patterns": [
+        "Shipping cost", "Delivery options", "How long to ship", "Shipping time",
+        "Express delivery", "Free shipping", "Shipping rates", "Delivery fee",
+        "International shipping", "Shipping policy", "Fast delivery"
+      ],
+      "responses": [
+        "I can provide you with shipping information! We offer several delivery options. What's your location, and are you looking for standard or express shipping?",
+        "Here's our shipping info: We offer free standard shipping on orders over $50, with delivery in 3-5 business days. Express options are also available. Where are you shipping to?",
+        "I'd be happy to explain our shipping options! Standard shipping is free on qualifying orders, and we have faster delivery available. What would work best for you?"
+      ]
+    },
+    {
+      "tag": "complaint",
+      "patterns": [
+        "I want to complain", "This is terrible", "Poor service", "Disappointed",
+        "Unsatisfied", "Bad experience", "Not happy", "Complaint", "Issue with",
+        "Problem with", "Unacceptable", "Horrible", "Worst experience"
+      ],
+      "responses": [
+        "I sincerely apologize for your poor experience. Your feedback is very important to us, and I want to make this right. Could you please tell me more about what happened?",
+        "I'm truly sorry to hear about your negative experience. I take your concerns seriously and want to resolve this immediately. What specific issue can I help address?",
+        "I apologize for falling short of your expectations. Your satisfaction is our priority, and I'm here to help fix whatever went wrong. What can I do to improve your experience?"
+      ]
+    },
+    {
+      "tag": "human_agent",
+      "patterns": [
+        "Speak to human", "Talk to agent", "Real person", "Human support",
+        "Live agent", "Customer service rep", "Speak to someone", "Transfer me",
+        "Connect me to agent", "I want human help", "Not a bot", "Real representative"
+      ],
+      "responses": [
+        "I understand you'd prefer to speak with a human agent. I'm connecting you with our support team right now. Please hold on while I transfer your conversation.",
+        "Of course! I'm transferring you to one of our human support specialists who can provide personalized assistance. Please wait a moment.",
+        "I'll connect you with a live agent immediately. They'll be able to help you with more complex issues. Please hold on."
+      ]
+    }
+  ],
+  "fallback_responses": [
+    "I'm not sure I understand that completely. Could you please rephrase your question or tell me more about what you need help with?",
+    "I want to make sure I help you correctly. Could you provide a bit more detail about what you're looking for?",
+    "I'm here to help! Could you try asking your question in a different way so I can better assist you?",
+    "I might need a little more information to help you properly. What specific issue or question do you have?"
+  ],
+  "escalation_triggers": [
+    "speak to manager",
+    "human agent",
+    "real person",
+    "supervisor",
+    "this is ridiculous",
+    "unacceptable",
+    "legal action",
+    "complaint"
+  ]
+}

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Customer Support - ChatBot</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 450px;
+            height: 650px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(20px);
+            border-radius: 20px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .chat-header {
+            background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+            color: white;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            position: relative;
+        }
+
+        .bot-avatar {
+            width: 45px;
+            height: 45px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .header-info h3 {
+            font-size: 18px;
+            margin-bottom: 3px;
+        }
+
+        .status {
+            font-size: 13px;
+            opacity: 0.9;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            background: #4ade80;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: linear-gradient(to bottom, #f8fafc, #f1f5f9);
+        }
+
+        .message {
+            margin-bottom: 20px;
+            animation: fadeInUp 0.3s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .message.user {
+            display: flex;
+            justify-content: flex-end;
+        }
+
+        .message.bot {
+            display: flex;
+            justify-content: flex-start;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .message-content {
+            max-width: 85%;
+            padding: 12px 16px;
+            border-radius: 18px;
+            font-size: 14px;
+            line-height: 1.4;
+            word-wrap: break-word;
+        }
+
+        .user .message-content {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot .message-content {
+            background: white;
+            color: #374151;
+            border: 1px solid #e5e7eb;
+            border-bottom-left-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .bot-avatar-small {
+            width: 30px;
+            height: 30px;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .timestamp {
+            font-size: 11px;
+            color: #9ca3af;
+            margin-top: 5px;
+            text-align: right;
+        }
+
+        .bot .timestamp {
+            text-align: left;
+        }
+
+        .typing-indicator {
+            display: none;
+            padding: 15px;
+            background: white;
+            border-radius: 18px;
+            border-bottom-left-radius: 4px;
+            margin-left: 40px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+            border: 1px solid #e5e7eb;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background: #9ca3af;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+        .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-10px); }
+        }
+
+        .quick-replies {
+            padding: 0 20px 10px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .quick-reply {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            border: 1px solid rgba(102, 126, 234, 0.3);
+            padding: 8px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .quick-reply:hover {
+            background: #667eea;
+            color: white;
+            transform: translateY(-1px);
+        }
+
+        .chat-input-container {
+            padding: 20px;
+            background: white;
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .chat-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: #f9fafb;
+            border: 2px solid #e5e7eb;
+            border-radius: 25px;
+            padding: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .chat-input:focus-within {
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .chat-input input {
+            flex: 1;
+            border: none;
+            outline: none;
+            padding: 12px 16px;
+            background: transparent;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .chat-input input::placeholder {
+            color: #9ca3af;
+        }
+
+        .send-button {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 16px;
+        }
+
+        .send-button:hover:not(:disabled) {
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+
+        .send-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .feedback-container {
+            display: flex;
+            gap: 5px;
+            margin-top: 8px;
+            justify-content: flex-end;
+        }
+
+        .feedback-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            color: #9ca3af;
+            transition: all 0.2s ease;
+        }
+
+        .feedback-btn:hover {
+            color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+
+        .feedback-btn.active {
+            color: #667eea;
+        }
+
+        .suggestions-container {
+            padding: 0 20px 15px;
+        }
+
+        .suggestions-title {
+            font-size: 12px;
+            color: #6b7280;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .suggestion {
+            background: white;
+            border: 1px solid #e5e7eb;
+            color: #374151;
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .suggestion:hover {
+            background: #f3f4f6;
+            transform: translateY(-1px);
+        }
+
+        .welcome-message {
+            text-align: center;
+            padding: 30px 20px;
+            color: #6b7280;
+        }
+
+        .welcome-icon {
+            font-size: 48px;
+            color: #667eea;
+            margin-bottom: 15px;
+        }
+
+        /* Mobile responsiveness */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+            
+            .chat-container {
+                height: 100vh;
+                max-height: 100vh;
+                border-radius: 0;
+            }
+        }
+
+        /* Scrollbar styling */
+        .chat-messages::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .chat-messages::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: rgba(0, 0, 0, 0.2);
+            border-radius: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="bot-avatar">
+                <i class="fas fa-robot"></i>
+            </div>
+            <div class="header-info">
+                <h3>AI Support Assistant</h3>
+                <div class="status">
+                    <div class="status-dot"></div>
+                    <span>Online & Ready to Help</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message">
+                <div class="welcome-icon">
+                    <i class="fas fa-comments"></i>
+                </div>
+                <h3>Welcome to Customer Support!</h3>
+                <p>I'm here to help you with orders, returns, product info, and more. How can I assist you today?</p>
+            </div>
+        </div>
+
+        <div class="suggestions-container" id="suggestions-container">
+            <div class="suggestions-title">Quick Options:</div>
+            <div class="suggestions">
+                <div class="suggestion" onclick="sendPredefinedMessage('Check my order status')">Check Order Status</div>
+                <div class="suggestion" onclick="sendPredefinedMessage('Return policy information')">Return Policy</div>
+                <div class="suggestion" onclick="sendPredefinedMessage('Track my package')">Track Package</div>
+                <div class="suggestion" onclick="sendPredefinedMessage('Product information')">Product Info</div>
+            </div>
+        </div>
+
+        <div class="quick-replies" id="quick-replies" style="display: none;">
+        </div>
+
+        <div class="typing-indicator" id="typing-indicator">
+            <div class="typing-dots">
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+                <div class="typing-dot"></div>
+            </div>
+        </div>
+
+        <div class="chat-input-container">
+            <div class="chat-input">
+                <input type="text" id="user-input" placeholder="Type your message here..." autocomplete="off">
+                <button class="send-button" id="send-button" onclick="sendMessage()">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentConversationId = null;
+        let isTyping = false;
+        let messageCounter = 0;
+
+        // Simulated AI responses for demo purposes
+        const aiResponses = {
+            'check my order status': {
+                response: 'I\'d be happy to help you check your order status! To look up your order, I\'ll need your order number or the email address you used when placing the order. Could you please provide one of these?',
+                quick_replies: ['I have my order number', 'Use my email address', 'I don\'t have either']
+            },
+            'return policy information': {
+                response: 'Our return policy allows returns within 30 days of purchase. Items must be unused and in original packaging. Free returns are available for most items, and refunds typically process within 3-5 business days. Would you like to start a return?',
+                quick_replies: ['Start a return', 'Refund timeline', 'Return shipping info']
+            },
+            'track my package': {
+                response: 'I can help you track your package! Please provide your tracking number or order number, and I\'ll get you the latest shipping information.',
+                quick_replies: ['Enter tracking number', 'Use order number', 'Check delivery status']
+            },
+            'product information': {
+                response: 'I\'m here to help with product information! What specific product would you like to know more about? I can provide details about features, specifications, availability, and pricing.',
+                quick_replies: ['Search by product name', 'Browse categories', 'Compare products']
+            },
+            'default': {
+                response: 'Thank you for contacting customer support! I understand you need assistance. Let me connect you with the right information or escalate to a human agent if needed. Could you please provide more details about your inquiry?',
+                quick_replies: ['Speak to human agent', 'General question', 'Technical support']
+            }
+        };
+
+        function sendMessage() {
+            const userInput = document.getElementById('user-input');
+            const userMessage = userInput.value.trim();
+            
+            if (!userMessage || isTyping) return;
+            
+            addMessage(userMessage, 'user');
+            userInput.value = '';
+            
+            showTypingIndicator();
+            
+            // Simulate API call delay
+            setTimeout(() => {
+                const response = getAIResponse(userMessage);
+                hideTypingIndicator();
+                addMessage(response.response, 'bot', response);
+                currentConversationId = ++messageCounter;
+                
+                // Show quick replies if available
+                showQuickReplies(response.quick_replies);
+                
+                // Hide suggestions after first message
+                hideSuggestions();
+            }, 1000 + Math.random() * 1500); // Random delay between 1-2.5 seconds
+        }
+
+        function getAIResponse(message) {
+            const lowerMessage = message.toLowerCase();
+            
+            // Check for specific keywords to provide appropriate responses
+            if (lowerMessage.includes('order') && lowerMessage.includes('status')) {
+                return aiResponses['check my order status'];
+            } else if (lowerMessage.includes('return') || lowerMessage.includes('policy')) {
+                return aiResponses['return policy information'];
+            } else if (lowerMessage.includes('track') || lowerMessage.includes('package') || lowerMessage.includes('shipping')) {
+                return aiResponses['track my package'];
+            } else if (lowerMessage.includes('product') || lowerMessage.includes('item') || lowerMessage.includes('info')) {
+                return aiResponses['product information'];
+            } else if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('help')) {
+                return {
+                    response: 'Hello! Welcome to our customer support. I\'m here to assist you with any questions about orders, returns, products, or general inquiries. How can I help you today?',
+                    quick_replies: ['Check order status', 'Return an item', 'Product question', 'Other inquiry']
+                };
+            } else if (lowerMessage.includes('thank') || lowerMessage.includes('thanks')) {
+                return {
+                    response: 'You\'re very welcome! I\'m glad I could help. Is there anything else you\'d like assistance with today?',
+                    quick_replies: ['Another question', 'Contact human agent', 'End chat']
+                };
+            } else {
+                return aiResponses['default'];
+            }
+        }
+
+        function sendPredefinedMessage(message) {
+            document.getElementById('user-input').value = message;
+            sendMessage();
+        }
+
+        function addMessage(message, sender, data = {}) {
+            const messagesContainer = document.getElementById('chat-messages');
+            const messageElement = document.createElement('div');
+            messageElement.classList.add('message', sender);
+            
+            const now = new Date();
+            const timeString = now.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'});
+            
+            if (sender === 'bot') {
+                messageElement.innerHTML = `
+                    <div class="bot-avatar-small">
+                        <i class="fas fa-robot"></i>
+                    </div>
+                    <div>
+                        <div class="message-content">${message}</div>
+                        <div class="timestamp">${timeString}</div>
+                        ${currentConversationId ? `
+                        <div class="feedback-container">
+                            <button class="feedback-btn" onclick="sendFeedback(${currentConversationId}, 1)" title="Helpful">
+                                <i class="fas fa-thumbs-up"></i>
+                            </button>
+                            <button class="feedback-btn" onclick="sendFeedback(${currentConversationId}, -1)" title="Not Helpful">
+                                <i class="fas fa-thumbs-down"></i>
+                            </button>
+                        </div>` : ''}
+                    </div>
+                `;
+            } else {
+                messageElement.innerHTML = `
+                    <div class="message-content">${message}</div>
+                    <div class="timestamp">${timeString}</div>
+                `;
+            }
+            
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        function showTypingIndicator() {
+            isTyping = true;
+            const typingIndicator = document.getElementById('typing-indicator');
+            const messagesContainer = document.getElementById('chat-messages');
+            
+            typingIndicator.style.display = 'block';
+            messagesContainer.appendChild(typingIndicator);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+            
+            document.getElementById('send-button').disabled = true;
+        }
+
+        function hideTypingIndicator() {
+            isTyping = false;
+            const typingIndicator = document.getElementById('typing-indicator');
+            typingIndicator.style.display = 'none';
+            document.getElementById('send-button').disabled = false;
+        }
+
+        function showQuickReplies(replies) {
+            const quickRepliesContainer = document.getElementById('quick-replies');
+            
+            if (replies && replies.length > 0) {
+                quickRepliesContainer.innerHTML = '';
+                replies.forEach(reply => {
+                    const replyElement = document.createElement('div');
+                    replyElement.classList.add('quick-reply');
+                    replyElement.textContent = reply;
+                    replyElement.onclick = () => sendPredefinedMessage(reply);
+                    quickRepliesContainer.appendChild(replyElement);
+                });
+                quickRepliesContainer.style.display = 'flex';
+            } else {
+                quickRepliesContainer.style.display = 'none';
+            }
+        }
+
+        function hideSuggestions() {
+            const suggestionsContainer = document.getElementById('suggestions-container');
+            suggestionsContainer.style.display = 'none';
+        }
+
+        function sendFeedback(conversationId, rating) {
+            const feedbackButtons = event.target.closest('.feedback-container').querySelectorAll('.feedback-btn');
+            
+            // Remove active class from all buttons in this container
+            feedbackButtons.forEach(btn => btn.classList.remove('active'));
+            
+            // Add active class to clicked button
+            event.target.closest('.feedback-btn').classList.add('active');
+            
+            // In a real implementation, you would send this feedback to your backend
+            console.log(`Feedback sent for conversation ${conversationId}: ${rating > 0 ? 'Positive' : 'Negative'}`);
+            
+            // Show a brief confirmation
+            const originalIcon = event.target.closest('.feedback-btn').innerHTML;
+            event.target.closest('.feedback-btn').innerHTML = '<i class="fas fa-check"></i>';
+            
+            setTimeout(() => {
+                event.target.closest('.feedback-btn').innerHTML = originalIcon;
+            }, 1500);
+        }
+
+        function clearChat() {
+            const messagesContainer = document.getElementById('chat-messages');
+            messagesContainer.innerHTML = `
+                <div class="welcome-message">
+                    <div class="welcome-icon">
+                        <i class="fas fa-comments"></i>
+                    </div>
+                    <h3>Welcome to Customer Support!</h3>
+                    <p>I'm here to help you with orders, returns, product info, and more. How can I assist you today?</p>
+                </div>
+            `;
+            
+            // Show suggestions again
+            document.getElementById('suggestions-container').style.display = 'block';
+            document.getElementById('quick-replies').style.display = 'none';
+            
+            currentConversationId = null;
+            messageCounter = 0;
+        }
+
+        // Handle Enter key press in input field
+        document.getElementById('user-input').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        // Focus input field on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('user-input').focus();
+        });
+
+        // Add some sample interactions for demo
+        function startDemoConversation() {
+            setTimeout(() => {
+                addMessage("Hello! How can I help you today?", 'bot');
+                showQuickReplies(['Check order status', 'Return policy', 'Product info', 'Other']);
+            }, 2000);
+        }
+
+        // Uncomment the line below to start a demo conversation automatically
+        // startDemoConversation();
+    </script>
+</body>
+</html>
