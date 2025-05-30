@@ -40,6 +40,11 @@ if not os.path.exists('models/intent_model.h5'):
     print("Training intent model...")
     intent_classifier.build_model()
     print("Model training complete")
+    
+# Use environment variables
+app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'fallback-secret-key')
+app.config['ENV'] = os.environ.get('FLASK_ENV', 'development')
+
 
 @app.route('/')
 def home():
